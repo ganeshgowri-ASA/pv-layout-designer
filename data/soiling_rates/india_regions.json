@@ -1,0 +1,87 @@
+{
+  "version": "1.0",
+  "last_updated": "2024-01-15",
+  "source": "NISE India / Regional Studies",
+  "regions": [
+    {
+      "name": "Gujarat",
+      "code": "GJ",
+      "center": {"lat": 23.0225, "lon": 72.5714},
+      "avg_daily_soiling": 0.0012,
+      "dust_density": "medium",
+      "rainfall_mm_annual": 750,
+      "cleaning_frequency_days": 30,
+      "notes": "Industrial areas may have higher rates"
+    },
+    {
+      "name": "Rajasthan",
+      "code": "RJ",
+      "center": {"lat": 26.9124, "lon": 75.7873},
+      "avg_daily_soiling": 0.0020,
+      "dust_density": "high",
+      "rainfall_mm_annual": 400,
+      "cleaning_frequency_days": 15,
+      "notes": "Desert region, high dust levels"
+    },
+    {
+      "name": "Maharashtra",
+      "code": "MH",
+      "center": {"lat": 19.0760, "lon": 72.8777},
+      "avg_daily_soiling": 0.0010,
+      "dust_density": "medium",
+      "rainfall_mm_annual": 2000,
+      "cleaning_frequency_days": 45,
+      "notes": "Coastal areas have lower dust but humidity effects"
+    },
+    {
+      "name": "Tamil Nadu",
+      "code": "TN",
+      "center": {"lat": 13.0827, "lon": 80.2707},
+      "avg_daily_soiling": 0.0008,
+      "dust_density": "low",
+      "rainfall_mm_annual": 1000,
+      "cleaning_frequency_days": 60,
+      "notes": "Generally cleaner, two monsoon seasons"
+    },
+    {
+      "name": "Karnataka",
+      "code": "KA",
+      "center": {"lat": 12.9716, "lon": 77.5946},
+      "avg_daily_soiling": 0.0009,
+      "dust_density": "low-medium",
+      "rainfall_mm_annual": 900,
+      "cleaning_frequency_days": 45,
+      "notes": "Varies significantly between regions"
+    },
+    {
+      "name": "Andhra Pradesh",
+      "code": "AP",
+      "center": {"lat": 15.9129, "lon": 79.7400},
+      "avg_daily_soiling": 0.0011,
+      "dust_density": "medium",
+      "rainfall_mm_annual": 750,
+      "cleaning_frequency_days": 30,
+      "notes": "Coastal vs inland variation"
+    },
+    {
+      "name": "Madhya Pradesh",
+      "code": "MP",
+      "center": {"lat": 23.2599, "lon": 77.4126},
+      "avg_daily_soiling": 0.0013,
+      "dust_density": "medium-high",
+      "rainfall_mm_annual": 1100,
+      "cleaning_frequency_days": 30,
+      "notes": "Central India, moderate conditions"
+    },
+    {
+      "name": "Uttar Pradesh",
+      "code": "UP",
+      "center": {"lat": 26.8467, "lon": 80.9462},
+      "avg_daily_soiling": 0.0016,
+      "dust_density": "high",
+      "rainfall_mm_annual": 900,
+      "cleaning_frequency_days": 21,
+      "notes": "Indo-Gangetic plain, high pollution"
+    }
+  ]
+}

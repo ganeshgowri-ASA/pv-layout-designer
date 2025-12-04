@@ -1,0 +1,40 @@
+{
+  "version": "1.0",
+  "description": "Soiling parameters for different regions",
+  "default_daily_rate": 0.001,
+  "regions": {
+    "india_north": {
+      "name": "Northern India",
+      "daily_soiling_rate": 0.0015,
+      "seasonal_factors": {
+        "summer": 1.5,
+        "monsoon": 0.3,
+        "winter": 0.8,
+        "post_monsoon": 1.0
+      }
+    },
+    "india_west": {
+      "name": "Western India (Gujarat)",
+      "daily_soiling_rate": 0.0012,
+      "seasonal_factors": {
+        "summer": 1.3,
+        "monsoon": 0.4,
+        "winter": 0.7,
+        "post_monsoon": 0.9
+      }
+    },
+    "india_south": {
+      "name": "Southern India",
+      "daily_soiling_rate": 0.0008,
+      "seasonal_factors": {
+        "summer": 1.0,
+        "monsoon": 0.3,
+        "winter": 0.6,
+        "post_monsoon": 0.8
+      }
+    }
+  },
+  "cleaning_effectiveness": 0.98,
+  "rainfall_threshold_mm": 5.0,
+  "notes": "Rates are fractional losses per day without cleaning"
+}

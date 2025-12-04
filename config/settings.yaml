@@ -1,0 +1,45 @@
+app:
+  name: "PV Layout Designer"
+  version: "0.1.0"
+  default_location:
+    latitude: 23.0225
+    longitude: 72.5714
+    zoom: 13
+
+map:
+  tile_layer: "OpenStreetMap"
+  drawing_tools:
+    - "rectangle"
+    - "polygon"
+    - "circle"
+    - "polyline"
+  default_height: 550
+
+modules:
+  default_type: "standard_72_cell"
+  dimensions:
+    standard_60_cell:
+      width: 0.992
+      height: 1.640
+      power: 300
+    standard_72_cell:
+      width: 0.992
+      height: 2.000
+      power: 400
+    bifacial_72_cell:
+      width: 1.134
+      height: 2.278
+      power: 550
+
+layout:
+  default_tilt: 15
+  default_azimuth: 180
+  default_gcr: 0.4
+  min_row_spacing: 0.5
+  max_row_spacing: 10.0
+
+export:
+  formats:
+    - "csv"
+    - "dxf"
+    - "json"
