@@ -5,7 +5,7 @@ This module implements geometric shading calculations and electrical loss modeli
 for solar PV arrays with bypass diode considerations.
 """
 
-from typing import Dict, List, Tuple
+from typing import Dict, List
 import numpy as np
 from datetime import datetime
 
@@ -287,10 +287,12 @@ def calculate_shadow_length(
         sun_elevation: Solar elevation angle in degrees
         
     Returns:
-        Shadow length in meters
+        Shadow length in meters. Returns a large finite value (1000m)
+        when sun is at or below horizon to avoid infinite values.
     """
     if sun_elevation <= 0:
-        return float('inf')  # Infinite shadow when sun is below horizon
+        # Return large finite value instead of infinity for safer calculations
+        return 1000.0  # Large shadow when sun is below horizon
     
     if sun_elevation >= 90:
         return 0.0  # No shadow when sun is directly overhead

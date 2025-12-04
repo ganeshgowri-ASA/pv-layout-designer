@@ -3,7 +3,7 @@ SESSION-04: Solar Position Calculations
 Stub implementation for integration with SESSION-06
 """
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Dict, List
 import math
 
