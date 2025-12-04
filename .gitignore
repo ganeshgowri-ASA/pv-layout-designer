@@ -16,6 +16,10 @@ parts/
 sdist/
 var/
 wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
@@ -75,6 +79,13 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# Streamlit
+.streamlit/
+
+# Temporary files
+*.log
+*.tmp
+/tmp/
 # Project specific
 *.log
 # Streamlit
