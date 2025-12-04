@@ -24,4 +24,4 @@ DEFAULT_TIMEZONE = 'Asia/Kolkata'  # Indian Standard Time (IST)
 
 # Critical Hours for Shading Analysis
 CRITICAL_START_HOUR = 9   # 9 AM
-CRITICAL_END_HOUR = 15    # 3 PM (exclusive, so 9 AM to 3 PM gives 7 hours: 9,10,11,12,13,14,15)
+CRITICAL_END_HOUR = 15    # 3 PM (inclusive range: 9,10,11,12,13,14,15 = 7 hours)

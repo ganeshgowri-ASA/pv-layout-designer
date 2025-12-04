@@ -174,7 +174,7 @@ def calculate_sun_path(lat: float, lon: float, date: str) -> List[Dict]:
     times = pd.date_range(
         start=tz.localize(dt),
         end=tz.localize(dt + timedelta(hours=23)),
-        freq='h'  # Use lowercase 'h' for hour (pandas 2.2+ compatibility)
+        freq='h'  # Hourly frequency
     )
     
     # Calculate solar positions for all hours
