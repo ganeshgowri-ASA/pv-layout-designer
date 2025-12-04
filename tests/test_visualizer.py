@@ -6,11 +6,6 @@ Tests for 2D/3D visualization functions
 import pytest
 import numpy as np
 from unittest.mock import Mock, patch, MagicMock
-import sys
-import os
-
-# Add src to path for imports
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from src.components.visualizer import (
     render_top_view,

@@ -4,11 +4,13 @@ SESSION-08: Visualization Integration Example
 """
 
 import streamlit as st
+from pathlib import Path
 import sys
-import os
 
-# Add src to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+# Add src to Python path for imports
+src_path = Path(__file__).parent.parent / 'src'
+if str(src_path) not in sys.path:
+    sys.path.insert(0, str(src_path))
 
 from components.visualizer import render_all_views, display_in_streamlit, VisualizerConfig
 

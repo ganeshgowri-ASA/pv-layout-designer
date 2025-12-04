@@ -12,7 +12,6 @@ import pydeck as pdk
 import pandas as pd
 import numpy as np
 from typing import Dict, List, Tuple, Optional, Any
-import streamlit as st
 
 
 # Color Coding Constants
@@ -303,14 +302,15 @@ def render_3d_isometric(layout: Dict[str, Any], config: Optional[VisualizerConfi
                 base_elevation = module.get('ground_clearance', 0.5)
                 module_length = module.get('length', 2.0)
                 
-                # Calculate height for 3D extrusion
+                # Calculate height for 3D extrusion (visual scaling factor)
+                # Note: Scaled by 1000x for better visibility in 3D view
                 height = base_elevation + module_length * np.sin(np.radians(tilt))
                 
                 modules_data.append({
                     'position': [lons[0], lats[0]],
-                    'coordinates': [[lon, lat] for lat, lon in coords],
-                    'elevation': base_elevation * 1000,  # Convert to mm for better visibility
-                    'height': height * 1000,  # Convert to mm
+                    'coordinates': [[lon, lat] for lat, lon in coords],  # PyDeck uses [lon, lat] order
+                    'elevation': base_elevation * 1000,  # Scaled 1000x for visibility
+                    'height': height * 1000,  # Scaled 1000x for visibility
                     'color': [74, 144, 226, 200],  # RGBA for blue modules
                     'name': f'Module {idx + 1}'
                 })
@@ -459,7 +459,6 @@ def render_all_views(layout: Dict[str, Any],
     }
 
 
-# Utility function for Streamlit integration
 def display_in_streamlit(views: Dict[str, Any], tab_names: List[str] = None):
     """
     Display all views in Streamlit tabs
@@ -468,6 +467,15 @@ def display_in_streamlit(views: Dict[str, Any], tab_names: List[str] = None):
         views: Dictionary with 'top_view', 'side_view', '3d_view'
         tab_names: Optional custom tab names
     """
+    # Import streamlit only when needed for UI integration
+    try:
+        import streamlit as st
+    except ImportError:
+        raise ImportError(
+            "Streamlit is required for display_in_streamlit(). "
+            "Install it with: pip install streamlit"
+        )
+    
     if tab_names is None:
         tab_names = ["2D Top View", "Side Profile", "3D Isometric"]
     
