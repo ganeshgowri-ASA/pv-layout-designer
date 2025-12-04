@@ -20,6 +20,23 @@ wheels/
 .installed.cfg
 *.egg
 
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
 # Virtual environments
 venv/
 ENV/
@@ -28,15 +45,35 @@ env/
 # Testing
 .pytest_cache/
 .coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
 htmlcov/
 .tox/
 
 # IDEs
+# Environment variables
+.env
+.env.local
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
 # OS
 .DS_Store
@@ -49,3 +86,31 @@ Thumbs.db
 *.log
 *.tmp
 /tmp/
+# Project specific
+*.log
+# Streamlit
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+tmp/
+temp/
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
+# Logs
+*.log
+logs/

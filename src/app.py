@@ -1,227 +1,218 @@
 """
 PV Layout Designer - Main Streamlit Application
-SESSION-06: Shading Analysis Integration
+SESSION-08: Visualization Integration Example
 """
 
 import streamlit as st
-import matplotlib.pyplot as plt
-import numpy as np
+from pathlib import Path
+import sys
 
-# Import shading model functions
-from src.models.shading_model import (
-    calculate_hourly_shading,
-    generate_shading_profile,
-    generate_winter_solstice_report
+# Add src to Python path for imports
+src_path = Path(__file__).parent.parent / 'src'
+if str(src_path) not in sys.path:
+    sys.path.insert(0, str(src_path))
+
+from components.visualizer import render_all_views, display_in_streamlit, VisualizerConfig
+
+# Page configuration
+st.set_page_config(
+    page_title="PV Layout Designer",
+    page_icon="🌞",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
+# Title
+st.title("🌞 PV Layout Designer - Visualization Demo")
+st.markdown("**SESSION-08: 2D/3D Multi-View Visualization**")
 
-def main():
-    """Main Streamlit application"""
-    st.set_page_config(
-        page_title="PV Layout Designer",
-        page_icon="🌞",
-        layout="wide"
+# Sidebar for configuration
+with st.sidebar:
+    st.header("Layout Configuration")
+    
+    tilt_angle = st.slider("Tilt Angle (degrees)", 0, 90, 20)
+    num_rows = st.slider("Number of Rows", 1, 10, 3)
+    row_spacing = st.slider("Row Spacing (meters)", 3.0, 10.0, 5.0, 0.5)
+    module_length = st.slider("Module Length (meters)", 1.0, 3.0, 2.0, 0.1)
+    ground_clearance = st.slider("Ground Clearance (meters)", 0.2, 2.0, 0.5, 0.1)
+    
+    st.markdown("---")
+    st.header("Visualization Settings")
+    
+    map_zoom = st.slider("Map Zoom Level", 10, 20, 15)
+    pitch_3d = st.slider("3D View Pitch", 0, 90, 45)
+    
+    generate_btn = st.button("🔄 Generate Visualization", type="primary", use_container_width=True)
+
+# Main content area
+st.markdown("---")
+
+# Sample layout data (would come from SESSION-05 in production)
+if generate_btn or 'layout' not in st.session_state:
+    # Generate sample layout
+    layout = {
+        'center': [23.0225, 72.5714],  # Gujarat, India
+        'boundaries': [
+            [23.0220, 72.5710],
+            [23.0230, 72.5710],
+            [23.0230, 72.5720],
+            [23.0220, 72.5720]
+        ],
+        'modules': [],
+        'walkways': [],
+        'equipment': [
+            {
+                'type': 'inverter',
+                'position': [23.0225, 72.5712],
+                'name': 'Central Inverter'
+            },
+            {
+                'type': 'transformer',
+                'position': [23.0226, 72.5718],
+                'name': 'Main Transformer'
+            }
+        ],
+        'margins': [
+            {
+                'coords': [
+                    [23.0219, 72.5709],
+                    [23.0231, 72.5709],
+                    [23.0231, 72.5721],
+                    [23.0219, 72.5721]
+                ]
+            }
+        ],
+        'tilt_angle': tilt_angle,
+        'module_length': module_length,
+        'module_height': 0.04,
+        'ground_clearance': ground_clearance,
+        'num_rows': num_rows,
+        'row_spacing': row_spacing
+    }
+    
+    # Generate module positions (simplified)
+    lat_start = 23.0222
+    lon_start = 72.5713
+    module_width_deg = 0.00001
+    module_length_deg = 0.00002
+    
+    for row in range(num_rows):
+        for col in range(5):  # 5 modules per row
+            lat_offset = row * 0.00003
+            lon_offset = col * 0.00003
+            
+            module_coords = [
+                [lat_start + lat_offset, lon_start + lon_offset],
+                [lat_start + lat_offset + module_length_deg, lon_start + lon_offset],
+                [lat_start + lat_offset + module_length_deg, lon_start + lon_offset + module_width_deg],
+                [lat_start + lat_offset, lon_start + lon_offset + module_width_deg]
+            ]
+            
+            layout['modules'].append({
+                'coords': module_coords,
+                'tilt': tilt_angle,
+                'azimuth': 180,
+                'length': module_length,
+                'ground_clearance': ground_clearance
+            })
+    
+    # Add walkways between rows
+    for row in range(num_rows - 1):
+        lat_offset = row * 0.00003 + module_length_deg
+        walkway_coords = [
+            [lat_start + lat_offset, lon_start - 0.00001],
+            [lat_start + lat_offset + 0.00001, lon_start - 0.00001],
+            [lat_start + lat_offset + 0.00001, lon_start + 0.00015],
+            [lat_start + lat_offset, lon_start + 0.00015]
+        ]
+        layout['walkways'].append({'coords': walkway_coords})
+    
+    st.session_state['layout'] = layout
+    
+    # Sample shading analysis (would come from SESSION-06 in production)
+    st.session_state['shading_analysis'] = {
+        'shaded_areas': [
+            {
+                'coords': layout['modules'][0]['coords'],
+                'shade_percentage': 25.0,
+                'time': '09:00'
+            }
+        ]
+    }
+
+# Display status
+if 'layout' in st.session_state:
+    layout = st.session_state['layout']
+    shading = st.session_state.get('shading_analysis', None)
+    
+    # Show summary stats
+    col1, col2, col3, col4 = st.columns(4)
+    with col1:
+        st.metric("Total Modules", len(layout.get('modules', [])))
+    with col2:
+        st.metric("Tilt Angle", f"{layout.get('tilt_angle', 0)}°")
+    with col3:
+        st.metric("Row Spacing", f"{layout.get('row_spacing', 0):.1f}m")
+    with col4:
+        st.metric("Equipment", len(layout.get('equipment', [])))
+    
+    st.markdown("---")
+    
+    # Create visualization config
+    config = VisualizerConfig(
+        map_center=layout['center'],
+        zoom_start=map_zoom,
+        initial_view_state={
+            'latitude': layout['center'][0],
+            'longitude': layout['center'][1],
+            'zoom': map_zoom,
+            'pitch': pitch_3d,
+            'bearing': 0
+        }
     )
     
-    st.title("🌞 PV Layout Designer")
-    st.subheader("Advanced Solar PV Plant Layout with Shading Analysis")
+    # Render all views
+    with st.spinner('Generating visualizations...'):
+        views = render_all_views(layout, shading_analysis=shading, config=config)
     
-    # Sidebar configuration
-    st.sidebar.header("Configuration")
+    # Display in tabs
+    display_in_streamlit(views)
     
-    # Layout parameters
-    st.sidebar.subheader("Layout Parameters")
-    row_pitch = st.sidebar.number_input("Row Pitch (m)", min_value=2.0, max_value=10.0, value=5.0, step=0.5)
-    module_length = st.sidebar.number_input("Module Length (m)", min_value=1.0, max_value=3.0, value=2.0, step=0.1)
-    tilt_angle = st.sidebar.number_input("Tilt Angle (°)", min_value=0, max_value=45, value=22, step=1)
-    
-    # Location parameters
-    st.sidebar.subheader("Location")
-    latitude = st.sidebar.number_input("Latitude (°)", min_value=-90.0, max_value=90.0, value=22.0, step=0.1)
-    longitude = st.sidebar.number_input("Longitude (°)", min_value=-180.0, max_value=180.0, value=72.0, step=0.1)
-    
-    # Create layout dictionary
-    layout = {
-        'row_pitch': row_pitch,
-        'module_length': module_length,
-        'tilt_angle': tilt_angle
-    }
-    
-    location = {
-        'latitude': latitude,
-        'longitude': longitude
-    }
-    
-    # Main content area
-    tab1, tab2, tab3 = st.tabs(["📊 Shading Analysis", "📅 Winter Solstice", "📈 Annual Profile"])
-    
-    with tab1:
-        st.header("Daily Shading Analysis")
-        
-        # Date selection
-        selected_date = st.date_input("Select Date", value=None)
-        
-        if selected_date:
-            date_str = selected_date.strftime('%Y-%m-%d')
-            
-            try:
-                # Calculate hourly shading
-                shading_data = calculate_hourly_shading(
-                    layout=layout,
-                    date=date_str,
-                    lat=latitude,
-                    lon=longitude
-                )
-                
-                if shading_data:
-                    # Create plot
-                    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 8))
-                    
-                    hours = [d['hour'] for d in shading_data]
-                    losses = [d['power_loss'] for d in shading_data]
-                    elevations = [d['sun_elevation'] for d in shading_data]
-                    
-                    # Power loss plot
-                    ax1.plot(hours, losses, marker='o', color='red', linewidth=2)
-                    ax1.set_xlabel('Hour of Day')
-                    ax1.set_ylabel('Power Loss (%)')
-                    ax1.set_title(f'Shading Power Losses - {date_str}')
-                    ax1.grid(True, alpha=0.3)
-                    ax1.set_xlim(min(hours), max(hours))
-                    
-                    # Sun elevation plot
-                    ax2.plot(hours, elevations, marker='s', color='orange', linewidth=2)
-                    ax2.set_xlabel('Hour of Day')
-                    ax2.set_ylabel('Sun Elevation (°)')
-                    ax2.set_title('Solar Elevation Angle')
-                    ax2.grid(True, alpha=0.3)
-                    ax2.set_xlim(min(hours), max(hours))
-                    
-                    plt.tight_layout()
-                    st.pyplot(fig)
-                    
-                    # Summary metrics
-                    avg_loss = sum(losses) / len(losses)
-                    max_loss = max(losses)
-                    
-                    col1, col2, col3 = st.columns(3)
-                    col1.metric("Average Loss", f"{avg_loss:.1f}%")
-                    col2.metric("Maximum Loss", f"{max_loss:.1f}%")
-                    col3.metric("Daylight Hours", len(shading_data))
-                    
-                    # Show data table
-                    with st.expander("View Hourly Data"):
-                        st.dataframe(shading_data)
-                else:
-                    st.warning("No daylight hours for selected date")
-                    
-            except Exception as e:
-                st.error(f"Error calculating shading: {str(e)}")
-    
-    with tab2:
-        st.header("❄️ Winter Solstice Analysis (Worst Case)")
-        
-        if st.button("Generate Winter Solstice Report"):
-            try:
-                # Generate report
-                report = generate_winter_solstice_report(
-                    layout=layout,
-                    lat=latitude,
-                    lon=longitude
-                )
-                
-                # Display metrics
-                col1, col2, col3, col4 = st.columns(4)
-                col1.metric("Critical Hours Loss (9-3PM)", f"{report['critical_hours_loss']:.1f}%")
-                col2.metric("Maximum Loss", f"{report['max_loss']:.1f}%")
-                col3.metric("Daily Average", f"{report['daily_average_loss']:.1f}%")
-                col4.metric("Daylight Hours", report['total_daylight_hours'])
-                
-                # Plot
-                hourly_data = report['hourly_data']
-                hours = [d['hour'] for d in hourly_data]
-                losses = [d['power_loss'] for d in hourly_data]
-                
-                fig, ax = plt.subplots(figsize=(10, 5))
-                ax.plot(hours, losses, marker='o', color='darkred', linewidth=2)
-                ax.fill_between(hours, losses, alpha=0.3, color='red')
-                ax.set_xlabel('Hour of Day')
-                ax.set_ylabel('Power Loss (%)')
-                ax.set_title('Winter Solstice Shading Losses (December 21)')
-                ax.grid(True, alpha=0.3)
-                
-                # Highlight critical hours
-                critical_hours = [h for h in hours if 9 <= h <= 15]
-                critical_losses = [losses[hours.index(h)] for h in critical_hours]
-                ax.scatter(critical_hours, critical_losses, color='orange', s=100, 
-                          label='Critical Hours (9-3PM)', zorder=5)
-                ax.legend()
-                
-                st.pyplot(fig)
-                
-                # Show data
-                with st.expander("View Winter Solstice Data"):
-                    st.dataframe(hourly_data)
-                    
-            except Exception as e:
-                st.error(f"Error generating report: {str(e)}")
-    
-    with tab3:
-        st.header("📆 Annual Shading Profile")
-        
-        if st.button("Generate Annual Profile"):
-            try:
-                # Generate annual profile
-                profile = generate_shading_profile(layout, location)
-                
-                # Display summary metrics
-                col1, col2 = st.columns(2)
-                col1.metric("Annual Average Loss", f"{profile['annual_average_loss']:.1f}%")
-                col2.metric("Worst Case Loss", f"{profile['worst_case_loss']:.1f}%")
-                
-                # Seasonal comparison
-                st.subheader("Seasonal Comparison")
-                
-                seasons = ['Winter Solstice', 'Equinox', 'Summer Solstice']
-                avg_losses = [
-                    profile['winter_solstice']['average_loss'],
-                    profile['equinox']['average_loss'],
-                    profile['summer_solstice']['average_loss']
-                ]
-                
-                fig, ax = plt.subplots(figsize=(10, 5))
-                bars = ax.bar(seasons, avg_losses, color=['blue', 'green', 'orange'])
-                ax.set_ylabel('Average Daily Loss (%)')
-                ax.set_title('Seasonal Shading Loss Comparison')
-                ax.grid(True, alpha=0.3, axis='y')
-                
-                # Add value labels on bars
-                for bar in bars:
-                    height = bar.get_height()
-                    ax.text(bar.get_x() + bar.get_width()/2., height,
-                           f'{height:.1f}%',
-                           ha='center', va='bottom')
-                
-                st.pyplot(fig)
-                
-                # Detailed seasonal data
-                with st.expander("View Seasonal Details"):
-                    st.subheader("Winter Solstice (Dec 21)")
-                    st.write(f"Average Loss: {profile['winter_solstice']['average_loss']:.1f}%")
-                    
-                    st.subheader("Equinox (Mar 21)")
-                    st.write(f"Average Loss: {profile['equinox']['average_loss']:.1f}%")
-                    
-                    st.subheader("Summer Solstice (Jun 21)")
-                    st.write(f"Average Loss: {profile['summer_solstice']['average_loss']:.1f}%")
-                    
-            except Exception as e:
-                st.error(f"Error generating annual profile: {str(e)}")
-    
-    # Footer
     st.markdown("---")
-    st.markdown("**SESSION-06: Inter-Row Shading Analysis with Electrical Loss Modeling**")
+    st.success("✅ Visualization complete! Use tabs above to explore different views.")
+    
+    # Additional information
+    with st.expander("ℹ️ About This Visualization"):
+        st.markdown("""
+        ### Features:
+        - **2D Top View**: Interactive Folium map with module overlay
+        - **Side Profile**: Matplotlib view showing tilt angle and row spacing
+        - **3D Isometric**: PyDeck interactive 3D visualization
+        
+        ### Color Coding:
+        - 🔵 **Blue**: Solar modules (#4A90E2)
+        - ⚪ **Grey**: Walkways (#9E9E9E)
+        - 🔴 **Red**: Inverters (#FF5252)
+        - 🟢 **Green**: Transformers (#4CAF50)
+        - 🟡 **Yellow**: Safety margins (#FFD600)
+        - ⚫ **Dark Grey**: Shaded areas (#424242)
+        
+        ### Integration:
+        - Requires: SESSION-05 (Layout Engine)
+        - Optional: SESSION-06 (Shading Analysis), SESSION-07 (Soiling)
+        - Supports: SESSION-10 (Export - PNG/SVG generation)
+        """)
 
+else:
+    st.info("👈 Configure layout parameters in the sidebar and click 'Generate Visualization'")
 
-if __name__ == '__main__':
-    main()
+# Footer
+st.markdown("---")
+st.markdown(
+    """
+    <div style='text-align: center; color: #666;'>
+        <small>PV Layout Designer | SESSION-08: Visualization | Built with Streamlit, Folium, PyDeck & Matplotlib</small>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
