@@ -23,6 +23,13 @@ ezdxf>=1.1.0
 
 # AI/ML (for future soiling detection)
 # ultralytics>=8.0.0  # YOLOv8 - uncomment when needed
+# Database
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+alembic>=1.11.0
+
+# Core dependencies
+python-dotenv>=1.0.0
 
 # Testing
 pytest>=7.4.0

@@ -21,6 +21,7 @@ wheels/
 *.egg
 
 # Virtual Environment
+# Virtual environments
 venv/
 ENV/
 env/
@@ -32,11 +33,27 @@ htmlcov/
 .tox/
 
 # IDEs
+# Environment variables
+.env
+.env.local
+
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
 
 # OS
 .DS_Store
@@ -65,3 +82,6 @@ logs/
 # Environment variables
 .env
 .env.local
+# Logs
+*.log
+logs/
