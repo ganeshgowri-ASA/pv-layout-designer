@@ -4,7 +4,6 @@ Implements Gujarat-specific soiling rates with seasonal variation and tilt corre
 """
 
 from typing import Dict, Tuple
-from datetime import datetime
 
 
 # Gujarat-specific soiling rates (% per day)

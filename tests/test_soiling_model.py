@@ -242,7 +242,7 @@ class TestIntegration:
         assert 12.0 <= annual_loss <= 15.0
         
         # Optimize cleaning
-        optimization = optimize_cleaning_schedule(0.35, tilt)
+        optimization = optimize_cleaning_schedule(0.35, tilt, 'gujarat')
         assert optimization['optimal_frequency'] >= 0
     
     def test_seasonal_variation_impact(self):
