@@ -17,6 +17,12 @@ from src.utils.geometry import (
 from src.models.solar_calculations import get_winter_solstice_angle
 
 
+# Configuration constants
+MIN_MODULE_OVERLAP_RATIO = 0.8  # Minimum 80% of module area must be within usable polygon
+MIN_GCR = 0.2  # Minimum Ground Coverage Ratio
+MAX_GCR = 0.7  # Maximum Ground Coverage Ratio
+
+
 def calculate_usable_area(site_polygon: List[Tuple[float, float]], margin: float) -> Polygon:
     """
     Apply perimeter margins and return usable area.
@@ -198,7 +204,7 @@ def place_modules(site_coords: List[Tuple[float, float]], config: Dict) -> Dict:
             # and module doesn't significantly extend outside
             if usable_polygon.contains(center_point):
                 intersection = usable_polygon.intersection(module_polygon)
-                if intersection.area >= module_polygon.area * 0.8:  # 80% overlap required
+                if intersection.area >= module_polygon.area * MIN_MODULE_OVERLAP_RATIO:
                     modules_in_row.append({
                         'position': (current_x, current_y),
                         'center': (center_x, center_y),
@@ -255,8 +261,8 @@ def optimize_layout(site_area: float, module_dims: Dict, target_gcr: float,
             - gcr: Achieved GCR
             - capacity_kwp: Expected capacity
     """
-    if not 0.2 <= target_gcr <= 0.7:
-        raise ValueError(f"Target GCR must be between 0.2 and 0.7, got {target_gcr}")
+    if not MIN_GCR <= target_gcr <= MAX_GCR:
+        raise ValueError(f"Target GCR must be between {MIN_GCR} and {MAX_GCR}, got {target_gcr}")
     
     module_length = module_dims['length']
     module_width = module_dims['width']

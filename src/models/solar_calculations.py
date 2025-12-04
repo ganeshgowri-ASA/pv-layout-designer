@@ -72,6 +72,8 @@ def calculate_solar_elevation(latitude: float, day_of_year: int, hour: float) ->
     sin_elevation = (math.sin(lat_rad) * math.sin(decl_rad) + 
                      math.cos(lat_rad) * math.cos(decl_rad) * math.cos(ha_rad))
     
+    # Clamp to valid range [-1, 1] to handle potential floating-point precision errors
+    # that could occur in edge cases near sunrise/sunset
     elevation = math.degrees(math.asin(max(-1, min(1, sin_elevation))))
     
     return max(0, elevation)  # Return 0 if sun is below horizon
