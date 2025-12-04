@@ -10,7 +10,7 @@ import os
 import json
 import logging
 from typing import Dict, List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from contextlib import contextmanager
 from uuid import UUID, uuid4
 
@@ -23,6 +23,7 @@ from sqlalchemy import (
     Text,
     DateTime,
     ForeignKey,
+    func,
 )
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID, JSON
 from sqlalchemy.ext.declarative import declarative_base
@@ -47,8 +48,8 @@ class Project(Base):
     name = Column(String(255), nullable=False)
     location_coords = Column(JSON)
     total_area_sqm = Column(Float)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     
     # Relationships
     layouts = relationship("Layout", back_populates="project", cascade="all, delete-orphan")
@@ -76,7 +77,7 @@ class Layout(Base):
     total_modules = Column(Integer)
     capacity_kwp = Column(Float)
     gcr_ratio = Column(Float)
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     
     # Relationships
     project = relationship("Project", back_populates="layouts")
@@ -240,7 +241,14 @@ class DatabaseManager:
                         project.name = project_data.get('name', project.name)
                         project.location_coords = project_data.get('location_coords', project.location_coords)
                         project.total_area_sqm = project_data.get('total_area_sqm', project.total_area_sqm)
-                        project.updated_at = datetime.utcnow()
+                        project.updated_at = datetime.now(timezone.utc)
+                        
+                        # If layouts are provided in update, clear existing layouts
+                        # This ensures clean state when updating with new layout data
+                        if 'layouts' in project_data:
+                            # Delete existing layouts (cascades to BoQ items)
+                            session.query(Layout).filter_by(project_id=project.id).delete()
+                            session.flush()
                     else:
                         # Create new project with specified ID
                         project = Project(

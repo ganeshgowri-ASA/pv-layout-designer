@@ -255,6 +255,55 @@ class TestProjectCRUD:
         loaded = clean_db.load_project(project_id)
         assert loaded['name'] == 'Updated Name'
         assert loaded['total_area_sqm'] == 15000.0
+    
+    def test_update_project_replaces_layouts(self, clean_db):
+        """Test that updating a project with new layouts replaces old ones"""
+        # Create project with layouts
+        project_data = {
+            'name': 'Layout Update Test',
+            'location_coords': {'lat': 23.0, 'lng': 72.0},
+            'total_area_sqm': 10000.0,
+            'layouts': [
+                {
+                    'total_modules': 100,
+                    'capacity_kwp': 50.0,
+                    'gcr_ratio': 0.30,
+                }
+            ]
+        }
+        project_id = clean_db.save_project(project_data)
+        
+        # Verify initial layout
+        loaded = clean_db.load_project(project_id)
+        assert len(loaded['layouts']) == 1
+        assert loaded['layouts'][0]['total_modules'] == 100
+        
+        # Update with new layouts
+        update_data = {
+            'id': project_id,
+            'name': 'Layout Update Test',
+            'location_coords': {'lat': 23.0, 'lng': 72.0},
+            'total_area_sqm': 10000.0,
+            'layouts': [
+                {
+                    'total_modules': 200,
+                    'capacity_kwp': 100.0,
+                    'gcr_ratio': 0.35,
+                },
+                {
+                    'total_modules': 150,
+                    'capacity_kwp': 75.0,
+                    'gcr_ratio': 0.32,
+                }
+            ]
+        }
+        clean_db.save_project(update_data)
+        
+        # Verify layouts were replaced
+        loaded = clean_db.load_project(project_id)
+        assert len(loaded['layouts']) == 2
+        assert loaded['layouts'][0]['total_modules'] == 200
+        assert loaded['layouts'][1]['total_modules'] == 150
 
 
 class TestCascadingDelete:
