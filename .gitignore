@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Distribution
+build/
+dist/
+*.egg-info/
+
+# Streamlit
+.streamlit/
+
+# Data files
+*.csv
+*.xlsx
+*.pdf
+*.dxf
+data/temp/
+
+# OS
+.DS_Store
+Thumbs.db
