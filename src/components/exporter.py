@@ -3,7 +3,7 @@ PV Layout Designer - Export & Reporting Module
 Generates professional Excel BoQ and PDF reports with layout images
 """
 
-from io import BytesIO
+from io import BytesIO, StringIO
 from datetime import datetime
 from typing import Dict, List, Any, Optional
 import pandas as pd
@@ -17,6 +17,9 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER, TA_LEFT
 import ezdxf
+
+# Constants
+METERS_TO_DEGREES = 111000  # Approximate conversion factor: 1 degree ≈ 111 km at equator
 
 
 def generate_excel_boq(layout: Dict[str, Any], config: Dict[str, Any]) -> BytesIO:
@@ -94,9 +97,8 @@ def generate_excel_boq(layout: Dict[str, Any], config: Dict[str, Any]) -> BytesI
             
             # Style title
             if row_idx == 1:
-                cell.font = title_font
-                cell.fill = header_fill
                 cell.font = Font(color="FFFFFF", bold=True, size=14)
+                cell.fill = header_fill
                 
             # Style section headers
             elif col_idx == 1 and value and ":" not in str(value) and row_data[1] == "":
@@ -360,8 +362,8 @@ def generate_pdf_report(layout: Dict[str, Any], config: Dict[str, Any],
                     story.append(Paragraph(img_name, styles['Heading3']))
                     story.append(img)
                     story.append(Spacer(1, 0.3*inch))
-            except Exception as e:
-                # Skip if image can't be loaded
+            except (IOError, OSError, ValueError) as e:
+                # Skip if image can't be loaded (file not found, invalid format, etc.)
                 story.append(Paragraph(f"[Image: {img_name} - Could not load]", styles['Normal']))
                 story.append(Spacer(1, 0.2*inch))
     
@@ -422,8 +424,6 @@ def generate_dxf_export(layout: Dict[str, Any]) -> BytesIO:
     Returns:
         BytesIO: DXF file in memory
     """
-    from io import StringIO
-    
     # Create new DXF document
     doc = ezdxf.new('R2010')  # AutoCAD 2010 format
     msp = doc.modelspace()
@@ -453,9 +453,9 @@ def generate_dxf_export(layout: Dict[str, Any]) -> BytesIO:
         # Draw module as rectangle
         points = [
             (x, y),
-            (x + module_length/111000, y),  # Convert meters to degrees (rough)
-            (x + module_length/111000, y + module_width/111000),
-            (x, y + module_width/111000),
+            (x + module_length/METERS_TO_DEGREES, y),  # Convert meters to degrees
+            (x + module_length/METERS_TO_DEGREES, y + module_width/METERS_TO_DEGREES),
+            (x, y + module_width/METERS_TO_DEGREES),
             (x, y)
         ]
         msp.add_lwpolyline(points, dxfattribs={'layer': 'MODULES'})
@@ -463,8 +463,8 @@ def generate_dxf_export(layout: Dict[str, Any]) -> BytesIO:
         # Add module ID text
         module_id = module.get('module_id', '')
         if module_id:
-            text_x = x + module_length/222000
-            text_y = y + module_width/222000
+            text_x = x + module_length/(METERS_TO_DEGREES * 2)
+            text_y = y + module_width/(METERS_TO_DEGREES * 2)
             msp.add_text(
                 str(module_id),
                 dxfattribs={
