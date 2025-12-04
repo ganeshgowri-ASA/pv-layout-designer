@@ -19,7 +19,7 @@ from src.utils.validators import (
     validate_height,
     validate_spacing,
 )
-from src.utils.constants import ORIENTATIONS, ROW_ORIENTATIONS
+from src.utils.constants import ORIENTATIONS, ROW_ORIENTATIONS, MM_TO_M
 
 
 def load_default_settings() -> Dict[str, Any]:
@@ -171,7 +171,7 @@ def render_input_panel() -> Dict[str, Any]:
         )
         
         # Show calculated module area
-        module_area = (module_length * module_width) / 1_000_000  # Convert mm² to m²
+        module_area = (module_length * module_width) * (MM_TO_M ** 2)  # Convert mm² to m²
         st.metric(
             "Module Area",
             f"{module_area:.2f} m²",
@@ -281,9 +281,9 @@ def render_input_panel() -> Dict[str, Any]:
         
         # Show calculated pitch (row-to-row spacing)
         if orientation == 'Portrait':
-            module_length_m = module_length / 1000
+            module_length_m = module_length * MM_TO_M
         else:
-            module_length_m = module_width / 1000
+            module_length_m = module_width * MM_TO_M
         
         # Pitch calculation based on GCR
         if gcr > 0:
