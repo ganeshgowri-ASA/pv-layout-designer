@@ -20,11 +20,19 @@ wheels/
 .installed.cfg
 *.egg
 
+# Virtual Environment
 # Virtual environments
 venv/
 ENV/
 env/
 
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# IDEs
 # Environment variables
 .env
 .env.local
@@ -51,6 +59,29 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# Streamlit
+.streamlit/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+tmp/
+temp/
+
+# Logs
+*.log
+logs/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
 # Logs
 *.log
 logs/
