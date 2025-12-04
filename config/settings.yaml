@@ -1,0 +1,63 @@
+# PV Layout Designer - Configuration Settings
+
+modules:
+  # Module Specifications (defaults)
+  length: 2278  # mm
+  width: 1134   # mm
+  thickness: 35  # mm
+  power: 550     # Wp
+  efficiency: 21.4  # %
+  orientation: "Portrait"  # Portrait or Landscape
+
+layout:
+  # Layout Configuration
+  tilt_angle: 15  # degrees (optimized for Gujarat)
+  height_from_ground: 1.0  # meters
+  modules_per_structure: 28
+  gcr: 0.40  # Ground Coverage Ratio
+  row_orientation: "North-South"  # North-South or East-West
+
+site:
+  # Site Configuration
+  walkway_width: 3.0  # meters
+  perimeter_margin: 3.0  # meters
+  equipment_spacing: 5.0  # meters
+
+# Input Ranges and Constraints
+constraints:
+  module_length:
+    min: 500
+    max: 3000
+  module_width:
+    min: 500
+    max: 2500
+  module_thickness:
+    min: 30
+    max: 50
+  module_power:
+    min: 200
+    max: 800
+  module_efficiency:
+    min: 15.0
+    max: 25.0
+  tilt_angle:
+    min: 0
+    max: 90
+  height_from_ground:
+    min: 0.5
+    max: 3.0
+  modules_per_structure:
+    min: 1
+    max: 100
+  gcr:
+    min: 0.20
+    max: 0.70
+  walkway_width:
+    min: 2.0
+    max: 10.0
+  perimeter_margin:
+    min: 1.0
+    max: 10.0
+  equipment_spacing:
+    min: 3.0
+    max: 15.0
