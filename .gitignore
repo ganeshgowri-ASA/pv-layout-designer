@@ -16,6 +16,18 @@ parts/
 sdist/
 var/
 wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
 *.egg-info/
 .installed.cfg
 *.egg
@@ -29,6 +41,10 @@ env/
 # Testing
 .pytest_cache/
 .coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
 htmlcov/
 .tox/
 
@@ -59,6 +75,8 @@ htmlcov/
 .DS_Store
 Thumbs.db
 
+# Project specific
+*.log
 # Streamlit
 .streamlit/
 

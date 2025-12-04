@@ -1,3 +1,4 @@
+"""PV Layout Designer - Source Package"""
 """
 PV Layout Designer - Source Package
 

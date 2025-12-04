@@ -1,3 +1,9 @@
+# Testing
+pytest>=7.4.0
+pytest-cov>=4.1.0
+
+# Core dependencies (minimal for soiling model)
+# Additional dependencies will be added by other sessions
 # Core Framework
 streamlit>=1.28.0
 
