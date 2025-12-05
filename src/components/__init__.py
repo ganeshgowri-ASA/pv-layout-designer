@@ -1,3 +1,4 @@
+# PV Layout Designer Components Package
 """
 PV Layout Designer - Components Module
 """

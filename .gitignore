@@ -187,6 +187,24 @@ htmlcov/
 htmlcov/
 .tox/
 
+# Distribution
+build/
+dist/
+*.egg-info/
+
+# Streamlit
+.streamlit/
+
+# Data files
+*.csv
+*.xlsx
+*.pdf
+*.dxf
+data/temp/
+
+# OS
+.DS_Store
+Thumbs.db
 # Database
 *.db
 *.sqlite

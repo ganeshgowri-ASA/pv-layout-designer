@@ -1,3 +1,4 @@
+# PV Layout Designer Package
 """
 PV Layout Designer - Main Package
 """
