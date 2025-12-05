@@ -7,14 +7,25 @@ from typing import Dict, List, Tuple, Optional
 from shapely.geometry import Polygon, Point, box
 from shapely.ops import unary_union
 
-from src.utils.geometry import (
-    calculate_row_pitch,
-    calculate_polygon_area,
-    calculate_gcr,
-    point_in_polygon,
-    apply_margin_to_polygon
-)
-from src.models.solar_calculations import get_winter_solstice_angle
+try:
+    from utils.geometry import (
+        calculate_row_pitch,
+        calculate_polygon_area,
+        calculate_gcr,
+        point_in_polygon,
+        apply_margin_to_polygon
+    )
+    from models.solar_calculations import get_winter_solstice_angle
+except ImportError:
+    # Fallback to relative imports
+    from ..utils.geometry import (
+        calculate_row_pitch,
+        calculate_polygon_area,
+        calculate_gcr,
+        point_in_polygon,
+        apply_margin_to_polygon
+    )
+    from ..models.solar_calculations import get_winter_solstice_angle
 
 
 # Configuration constants
