@@ -13,6 +13,12 @@ __pycache__/
 *$py.class
 *.so
 .Python
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
 build/
 develop-eggs/
 dist/
@@ -150,6 +156,8 @@ env/
 .coverage
 .coverage.*
 htmlcov/
+*.cover
+.hypothesis/
 .tox/
 .nox/
 htmlcov/
@@ -183,6 +191,8 @@ htmlcov/
 Thumbs.db
 
 # Project specific
+*.log
+.env
 /data/*.csv
 /data/*.json
 /models/*.pt

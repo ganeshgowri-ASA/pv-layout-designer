@@ -1,3 +1,18 @@
+# Core dependencies for PV Layout Designer
+
+# Solar position calculations (industry standard)
+pvlib>=0.9.0
+
+# Date and time handling
+pytz>=2021.3
+
+# Scientific computing
+numpy>=1.21.0
+pandas>=1.3.0
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=3.0.0
 # Core dependencies for PV Layout Designer - SESSION-05
 streamlit>=1.28.0
 folium>=0.14.0
