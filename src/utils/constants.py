@@ -1,5 +1,8 @@
 """
-Physical constants and configuration for PV Layout Designer
+Physical and geographical constants for PV layout design.
+
+This module contains fundamental constants used across the application
+for solar calculations, geographical defaults, and physical parameters.
 """
 
 # Orientation options
@@ -14,20 +17,14 @@ ROW_ORIENTATIONS = [ROW_ORIENTATION_NS, ROW_ORIENTATION_EW]
 
 # Physical constants
 GRAVITY = 9.81  # m/s^2
-SOLAR_CONSTANT = 1367  # W/m^2
+SOLAR_CONSTANT = 1367  # W/m^2 (Solar constant)
 
 # Conversion factors
 MM_TO_M = 0.001
 M_TO_MM = 1000
-Physical and geographical constants for PV layout design.
-
-This module contains fundamental constants used across the application
-for solar calculations, geographical defaults, and physical parameters.
-"""
 
 # Solar and Earth Constants
 EARTH_TILT = 23.5  # Earth's axial tilt in degrees
-SOLAR_CONSTANT = 1367  # Solar constant in W/m²
 
 # Gujarat, India - Default Location
 GUJARAT_LATITUDE = 23.0225  # Latitude in degrees (North)
