@@ -1,3 +1,6 @@
+"""
+PV Layout Designer - Components Module
+"""
 """Components Package - UI and Application Components"""
 """
 PV Layout Designer Components
